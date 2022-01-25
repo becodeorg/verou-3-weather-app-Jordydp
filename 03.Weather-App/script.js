@@ -18,11 +18,20 @@ const fetchData = (event) => {
     //console.log(searchFieldInput);
     //fetch api + value of input field + metric + api key
 
-    return fetch("http://api.openweathermap.org/data/2.5/weather?q="+ searchFieldInput +"&appid="+Data.key +"&units=metric")
+    fetch("http://api.openweathermap.org/data/2.5/weather?q="+ searchFieldInput +"&appid="+Data.key +"&units=metric")
     .then(response => response.json())
     .then(data => {
         let weatherinfo = data;
-        console.log(weatherinfo)});
+        console.log(weatherinfo);
+        const lon = weatherinfo.coord.lon;
+        console.log(lon);
+        const lat = weatherinfo.coord.lat;
+        console.log(lat);
+        fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +"&exclude=&appid="+ Data.key+"&units=metric")
+        .then(response => response.json())
+        .then(info => console.log(info))
+    });
+
 
         
         
