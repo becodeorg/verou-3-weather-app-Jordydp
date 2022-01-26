@@ -41,7 +41,7 @@ h2{
     right:0;
     bottom:0;
     left:0;
-    width: 320px;
+    width: 60vw;
     height: 3rem;
     outline: none;
     border: none;
@@ -80,6 +80,13 @@ button{
     border-radius: 50%;
     
 }
+section{
+    display: flex;
+    margin-top: 4rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 .card{
     width: 30vw;
     height: auto;
@@ -100,4 +107,14 @@ button{
     margin: 1rem;
     display: flex;
     flex-direction: column;
+}
+
+
+@media screen and (min-width:668px){
+    section{
+        width: 90vw;
+        margin-left: 5vw;
+        flex-direction: row;
+        
+    }
 }

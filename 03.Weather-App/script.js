@@ -3,7 +3,7 @@ import Data from "./config.js";
 
 //get inputfield
 const searchField = document.getElementById("searchfield");
-console.log(searchField);
+//console.log(searchField);
 
 const submit = document.querySelector("button")
 
@@ -28,24 +28,23 @@ const fetchData = (event) => {
             //store data from fetch inside a variable
             let lonAndLat = data;
             //console log this info
-            console.log(lonAndLat);
+           // console.log(lonAndLat);
             // get longitude from first api and stor in variable
             const lon = lonAndLat.coord.lon;
-            console.log(lon);
+            //console.log(lon);
             //get latitude from first api and store in variable
             const lat = lonAndLat.coord.lat;
-            console.log(lat);
+            //console.log(lat);
 
             //fetch new api with lat en lon + api key from config
             fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data.key + "&units=metric")
                 .then(response => response.json())
                 .then(info => {
                     let weatherInfo = info;
-                    console.log(weatherInfo);
+                    // console.log(weatherInfo);
                     const days = weatherInfo.daily;
-                    console.log(days);
+                    //console.log(days);
                     for (let i = 0; i < 5; i++) {
-                        console.log(days[i]);
                         cardCreater(days[i]);
                     }
 
@@ -87,7 +86,7 @@ const cardCreater = (day) => {
     console.log(day);
     // create a card
     const searchFieldInput = searchField.value;
-    console.log(searchFieldInput)
+    console.log(searchFieldInput);
 
     const newCard = document.createElement("article");
     newCard.classList.add("card");
@@ -101,7 +100,7 @@ const cardCreater = (day) => {
 
     //card icon
     const icon = document.createElement("img");
-    icon.src = "http://openweathermap.org/img/wn/" + weatherInfo.current.weather[0].icon + "@2x.png";
+    icon.src = "http://openweathermap.org/img/wn/" + day.weather[0].icon + "@2x.png";
     newCard.appendChild(icon);
 
     //container for text containers
@@ -114,12 +113,12 @@ const cardCreater = (day) => {
     textContainerLeft.classList.add("textcontainerleft");
     textContainer.appendChild(textContainerLeft);
     const temp = document.createElement("p");
-    temp.innerText = weatherInfo.current.temp + "°";
+    temp.innerText = day.temp.day + "°";
     textContainerLeft.appendChild(temp);
 
     //weather description
     const description = document.createElement("p");
-    description.innerText = weatherInfo.current.weather[0].description;
+    description.innerText = day.weather[0].description;
     textContainerLeft.appendChild(description);
 
     //create textcontainer right for spans
@@ -129,8 +128,9 @@ const cardCreater = (day) => {
 
 
 
-    let sunriseTime = weatherInfo.current.sunrise
-    let sunsetTime = weatherInfo.current.sunset
+    let sunriseTime = day.sunrise
+    let sunsetTime = day.sunset
+
     const getTime = (time) => {
         // Create a new JavaScript Date object based on the timestamp
         // multiplied by 1000 so that the argument is in milliseconds, not seconds.
@@ -154,13 +154,12 @@ const cardCreater = (day) => {
     const sunset = document.createElement("span");
     sunset.innerText = "sunset:" + " " + getTime(sunsetTime);
     textContainerRight.appendChild(sunset);
-    //min temp
-    const minTemp = document.createElement("span");
-    minTemp.innerText = "min temp °:" + " " + lonAndLat.main.temp_min + "°";
-    textContainerRight.appendChild(minTemp);
+    //min max temp
+    const minMaxTemp = document.createElement("span");
+    minMaxTemp.innerText = day.temp.min + "°" + " | " + day.temp.max + "°"; 
+    textContainerRight.appendChild(minMaxTemp);
+    
 
-    const maxTemp = document.createElement("span");
-    maxTemp.innerText = "max temp °:" + " " + lonAndLat.main.temp_max + "°";
-    textContainerRight.appendChild(maxTemp);
+
 
 }
