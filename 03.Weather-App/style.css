@@ -40,8 +40,8 @@ h2{
     top:1rem;
     right:0;
     bottom:0;
-    left:10vw;
-    width: 70vw;
+    left:0;
+    width: 320px;
     height: 3rem;
     outline: none;
     border: none;
@@ -50,7 +50,7 @@ h2{
     text-shadow: 0 0 10px #ccc;
     padding: 0 80px 0 20px;
     border-radius: 30px;
-    /*box-shadow: 12px 13px 25px 0 #111, 8px 9px 25px 0 rgba(0, 0, 0, 0.2)*/;
+    box-shadow: 12px 13px 25px 0 #111, 8px 9px 25px 0 rgba(0, 0, 0, 0.2);
     transition: all 1s;
     font-weight: bolder;
     letter-spacing: 0.1em;
@@ -60,7 +60,8 @@ h2{
 
 }
 .searchfield:focus{
-    cursor: text;  
+    cursor: text;
+      
 }
 button{
     font-weight: 600;
@@ -69,7 +70,7 @@ button{
     width: 3rem;
     margin: auto;
     top:1rem;
-    left:-2rem;
+    left:-4rem;
     right:32px;
     outline: none;
     border: none;
@@ -78,4 +79,25 @@ button{
     text-shadow: 0 0 10px #ccc;
     border-radius: 50%;
     
+}
+.card{
+    width: 30vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.textcontainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.textcontainerleft{
+    margin: 1rem;
+}
+.textcontainerright{
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
 }
