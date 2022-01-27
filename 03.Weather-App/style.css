@@ -2,13 +2,14 @@
     margin:0;
     padding:0;
     box-sizing: border-box;
-
+}
+html{
+    background: linear-gradient(to left, #012436, #03144d);
 
 }
 @media screen and (max-width: 320px ) {
 }
     body{
-        background: linear-gradient(to left, #012436, #03144d);
         color: white;
         width: 100vw;
         height: 100%;
@@ -86,8 +87,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex-grow: 5;
-        flex-wrap: wrap;
+        flex-grow: 6;
+        flex-wrap: nowrap;
     }
     .card{
     width: 300px;
@@ -124,9 +125,12 @@
 
 @media screen and (min-width:668px){
     section{
-        width: 90vw;
-        margin-left: 5vw;
-        flex-direction: row;
+        width: 100%;
         
+        flex-flow: row wrap;  
+        position: relative; 
+    }
+    .card{
+        flex: 0 1 calc(15% - 8px); /* <-- adjusting for margin */ 
     }
 }
