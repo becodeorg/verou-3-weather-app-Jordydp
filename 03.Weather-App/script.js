@@ -1,6 +1,29 @@
 //import from config.js
 import Data from "./config.js";
 
+
+//array of weekdays
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"];
+
+//d = date
+let d = new Date();
+// n = date in number 0->6
+let n = d.getDay();
+console.log(n)
+/*for(let i = 0; i < weekdays.length; i++){
+    let x = (n+i) % weekdays.length;
+
+    let weekday = weekdays[x];
+
+ let weekDaysInOrder = weekday;
+}*/
+//get weekdays slice is used to split the array started from n and n = today
+//then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
+const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0,n));
+console.log(weekDaysInOrder);
+
+
+
 //get inputfield
 const searchField = document.getElementById("searchfield");
 //console.log(searchField);
@@ -45,7 +68,7 @@ const fetchData = (event) => {
                     const days = weatherInfo.daily;
                     //console.log(days);
                     for (let i = 0; i < 5; i++) {
-                        cardCreater(days[i]);
+                        cardCreater(days[i], i);
                     }
 
 
@@ -82,8 +105,9 @@ const getTime = (time) => {
     return formattedTime;
 }
 
-const cardCreater = (day) => {
+const cardCreater = (day, i) => {
     console.log(day);
+    
     // create a card
     const searchFieldInput = searchField.value;
     console.log(searchFieldInput);
@@ -93,10 +117,22 @@ const cardCreater = (day) => {
     section.appendChild(newCard);
 
     //create cardTitle
-    const cardTitle = document.createElement("h3");
+    const cardTitle = document.createElement("h2");
     cardTitle.classList.add('cardTitle');
     cardTitle.innerText = searchFieldInput;
     newCard.appendChild(cardTitle);
+
+    const dayTitle = document.createElement("h3");
+    dayTitle.innerText= weekDaysInOrder[i];
+    newCard.appendChild(dayTitle);
+
+
+    
+    
+ 
+    
+
+
 
     //card icon
     const icon = document.createElement("img");
@@ -159,7 +195,36 @@ const cardCreater = (day) => {
     minMaxTemp.innerText = day.temp.min + "°" + " | " + day.temp.max + "°"; 
     textContainerRight.appendChild(minMaxTemp);
     
-
-
-
 }
+
+
+
+const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'My First dataset',
+      backgroundColor: 'rgb(255, 99, 132)',
+      borderColor: 'rgb(255, 99, 132)',
+      data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: {}
+  };
+
+  const myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
