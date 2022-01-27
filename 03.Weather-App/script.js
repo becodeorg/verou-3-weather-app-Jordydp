@@ -1,5 +1,12 @@
 //import from config.js
 import Data from "./config.js";
+console.log(Data);
+console.log(Data[0].key);
+
+const body = document.querySelector("body");
+
+
+
 
 
 //array of weekdays
@@ -20,12 +27,13 @@ console.log(n)
 //get weekdays slice is used to split the array started from n and n = today
 //then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
 const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0,n));
-console.log(weekDaysInOrder);
+
 
 
 
 //get inputfield
 const searchField = document.getElementById("searchfield");
+
 //console.log(searchField);
 
 const submit = document.querySelector("button")
@@ -38,14 +46,15 @@ const section = document.querySelector("section");
 const fetchData = (event) => {
     //prevent default
     event.preventDefault();
-
+    
     //get value of inputfield
     const searchFieldInput = searchField.value;
+
 
     //console.log(searchFieldInput);
     //fetch api + value of input field + metric + api key
 
-    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchFieldInput + "&appid=" + Data.key + "&units=metric")
+    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchFieldInput + "&appid=" + Data[0].key + "&units=metric")
         .then(response => response.json())
         .then(data => {
             //store data from fetch inside a variable
@@ -60,7 +69,7 @@ const fetchData = (event) => {
             //console.log(lat);
 
             //fetch new api with lat en lon + api key from config
-            fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data.key + "&units=metric")
+            fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data[0].key + "&units=metric")
                 .then(response => response.json())
                 .then(info => {
                     let weatherInfo = info;
@@ -68,9 +77,17 @@ const fetchData = (event) => {
                     const days = weatherInfo.daily;
                     //console.log(days);
                     for (let i = 0; i < 5; i++) {
+ 
                         cardCreater(days[i], i);
                     }
 
+                    fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
+                    .then(response => response.json())
+                    .then(image => {
+                    let background = image.results[3].urls.raw;
+                    console.log(background)
+                    body.style.backgroundImage = "url("+background +")";
+                    });
 
 
 
@@ -86,7 +103,8 @@ const fetchData = (event) => {
 
 }
 //addEventListener on click use event
-submit.addEventListener('click', fetchData)
+submit.addEventListener('click', fetchData);
+
 
 
 const getTime = (time) => {
@@ -106,7 +124,7 @@ const getTime = (time) => {
 }
 
 const cardCreater = (day, i) => {
-    console.log(day);
+    //console.log(day);
     
     // create a card
     const searchFieldInput = searchField.value;
@@ -119,18 +137,14 @@ const cardCreater = (day, i) => {
     //create cardTitle
     const cardTitle = document.createElement("h2");
     cardTitle.classList.add('cardTitle');
-    cardTitle.innerText = searchFieldInput;
+    cardTitle.innerText = "The weather in" + " " + searchFieldInput;
     newCard.appendChild(cardTitle);
 
-    const dayTitle = document.createElement("h3");
-    dayTitle.innerText= weekDaysInOrder[i];
+
+    //adding days to card
+    const dayTitle = document.createElement("h2");
+    dayTitle.innerText=  "on" + " " + weekDaysInOrder[i] + " is";
     newCard.appendChild(dayTitle);
-
-
-    
-    
- 
-    
 
 
 
@@ -199,32 +213,12 @@ const cardCreater = (day, i) => {
 
 
 
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-  ];
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'My First dataset',
-      backgroundColor: 'rgb(255, 99, 132)',
-      borderColor: 'rgb(255, 99, 132)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  };
+searchField.addEventListener("keyup", function(KeyboardEvent){
+    if(KeyboardEvent === 13){
+        for (let i = 0; i < 5; i++) {
+            cardCreater(days[i], i);
+        };
 
-  const config = {
-    type: 'line',
-    data: data,
-    options: {}
-  };
-
-  const myChart = new Chart(
-    document.getElementById('myChart'),
-    config
-  );
+    }
+})
