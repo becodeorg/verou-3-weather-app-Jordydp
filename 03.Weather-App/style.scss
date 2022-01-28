@@ -13,7 +13,9 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-
+            font-family: 'Merriweather Sans', sans-serif;
+            text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+            letter-spacing: 0.1rem;
             header {
                 align-items: center;
                 display: flex;
@@ -74,7 +76,7 @@
             section {
                 margin-top: 4rem;
                 display: flex;
-                flex-direction: column;
+                flex-direction: column-reverse;
                 justify-content: center;
                 align-items: center;
 
@@ -90,22 +92,36 @@
                     border-radius: 30px;
                     box-shadow: inset -5px -5px 250px rgba(255, 255, 255, 0.02);
                     backdrop-filter: blur(20px);
-                    display: flex;
+                    display: flex; 
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
 
-                    .textcontainer {
+                    .iconholder{
+                        width: 100%;
                         display: flex;
                         flex-direction: row;
-                        justify-content: space-around;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: small;
 
-                        .textcontainerleft {
-                            margin: 1rem;
+                    }
+
+                    .textcontainer {
+                        margin-top: 1rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 1rem;
+
+                         h1{
+                           font-size: xx-large;
+                           font-weight: 600;
                         }
 
                         .textcontainerright {
-                            margin: 1rem;
+                            //margin: 1rem;
                             display: flex;
                             flex-direction: column;
                         }
@@ -118,8 +134,8 @@
         body{
             section{
                 width: 100%;
-                flex-direction: row;
-                flex-flow: row wrap;
+                
+                flex-flow: row-reverse wrap;
                 position: relative;
 
                 .card{

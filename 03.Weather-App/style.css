@@ -14,6 +14,9 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    font-family: 'Merriweather Sans', sans-serif;
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    letter-spacing: 0.1rem;
   }
   * body header {
     -webkit-box-align: center;
@@ -80,9 +83,9 @@
     display: -ms-flexbox;
     display: flex;
     -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center;
@@ -116,7 +119,8 @@
         -ms-flex-pack: center;
             justify-content: center;
   }
-  * body section .card .textcontainer {
+  * body section .card .iconholder {
+    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -124,14 +128,36 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
-    -ms-flex-pack: distribute;
-        justify-content: space-around;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    font-size: small;
   }
-  * body section .card .textcontainer .textcontainerleft {
-    margin: 1rem;
+  * body section .card .textcontainer {
+    margin-top: 1rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 1rem;
+  }
+  * body section .card .textcontainer h1 {
+    font-size: xx-large;
+    font-weight: 600;
   }
   * body section .card .textcontainer .textcontainerright {
-    margin: 1rem;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -146,11 +172,9 @@
   * body section {
     width: 100%;
     -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -ms-flex-flow: row wrap;
-        flex-flow: row wrap;
+    -webkit-box-direction: reverse;
+        -ms-flex-flow: row-reverse wrap;
+            flex-flow: row-reverse wrap;
     position: relative;
   }
   * body section .card {

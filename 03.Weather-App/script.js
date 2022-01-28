@@ -1,8 +1,7 @@
 //import from config.js
 import Data from "./config.js";
-console.log(Data);
-console.log(Data[0].key);
 
+//select body for background change
 const body = document.querySelector("body");
 
 
@@ -10,7 +9,7 @@ const body = document.querySelector("body");
 
 
 //array of weekdays
-const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"];
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 //d = date
 let d = new Date();
@@ -26,7 +25,7 @@ console.log(n)
 }*/
 //get weekdays slice is used to split the array started from n and n = today
 //then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
-const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0,n));
+const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
 
 
 
@@ -46,7 +45,7 @@ const section = document.querySelector("section");
 const fetchData = (event) => {
     //prevent default
     event.preventDefault();
-    
+
     //get value of inputfield
     const searchFieldInput = searchField.value;
 
@@ -60,7 +59,7 @@ const fetchData = (event) => {
             //store data from fetch inside a variable
             let lonAndLat = data;
             //console log this info
-           // console.log(lonAndLat);
+            // console.log(lonAndLat);
             // get longitude from first api and stor in variable
             const lon = lonAndLat.coord.lon;
             //console.log(lon);
@@ -73,21 +72,21 @@ const fetchData = (event) => {
                 .then(response => response.json())
                 .then(info => {
                     let weatherInfo = info;
-                    // console.log(weatherInfo);
+                     console.log(weatherInfo);
                     const days = weatherInfo.daily;
-                    //console.log(days);
+                    console.log(days);
                     for (let i = 0; i < 5; i++) {
- 
+
                         cardCreater(days[i], i);
                     }
 
                     fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
-                    .then(response => response.json())
-                    .then(image => {
-                    let background = image.results[3].urls.raw;
-                    console.log(background)
-                    body.style.backgroundImage = "url("+background +")";
-                    });
+                        .then(response => response.json())
+                        .then(image => {
+                            let background = image.results[1].urls.raw;
+                            console.log(background)
+                            body.style.backgroundImage = "url(" + background + ")";
+                        });
 
 
 
@@ -125,14 +124,14 @@ const getTime = (time) => {
 
 const cardCreater = (day, i) => {
     //console.log(day);
-    
+
     // create a card
     const searchFieldInput = searchField.value;
     console.log(searchFieldInput);
 
     const newCard = document.createElement("article");
     newCard.classList.add("card");
-    section.appendChild(newCard);
+    section.prepend(newCard);
 
     //create cardTitle
     const cardTitle = document.createElement("h2");
@@ -143,15 +142,24 @@ const cardCreater = (day, i) => {
 
     //adding days to card
     const dayTitle = document.createElement("h2");
-    dayTitle.innerText=  "on" + " " + weekDaysInOrder[i] + " is";
+    dayTitle.innerText = "on" + " " + weekDaysInOrder[i] + " is";
     newCard.appendChild(dayTitle);
 
+    //icon + description div
+    const iconHolder = document.createElement("div");
+    iconHolder.classList.add("iconholder");
+    newCard.appendChild(iconHolder);
 
 
     //card icon
     const icon = document.createElement("img");
     icon.src = "http://openweathermap.org/img/wn/" + day.weather[0].icon + "@2x.png";
-    newCard.appendChild(icon);
+    iconHolder.appendChild(icon);
+
+    //weather description
+    const description = document.createElement("p");
+    description.innerText = day.weather[0].description;
+    iconHolder.appendChild(description);
 
     //container for text containers
     const textContainer = document.createElement("div");
@@ -162,14 +170,18 @@ const cardCreater = (day, i) => {
     const textContainerLeft = document.createElement("div");
     textContainerLeft.classList.add("textcontainerleft");
     textContainer.appendChild(textContainerLeft);
-    const temp = document.createElement("p");
-    temp.innerText = day.temp.day + "°";
+
+    //create h3 for the temprature
+    const temp = document.createElement("h1");
+    temp.innerText = day.temp.day + "°C";
     textContainerLeft.appendChild(temp);
 
-    //weather description
-    const description = document.createElement("p");
-    description.innerText = day.weather[0].description;
-    textContainerLeft.appendChild(description);
+    //min max temp
+    const feelsLike = document.createElement("span");
+    feelsLike.innerText = "Feels like:" + " " + day.feels_like.day + "°C";
+    textContainerLeft.appendChild(feelsLike);
+
+
 
     //create textcontainer right for spans
     const textContainerRight = document.createElement("div");
@@ -178,8 +190,9 @@ const cardCreater = (day, i) => {
 
 
 
-    let sunriseTime = day.sunrise
-    let sunsetTime = day.sunset
+    let sunriseTime = day.sunrise;
+    let sunsetTime = day.sunset;
+    
 
     const getTime = (time) => {
         // Create a new JavaScript Date object based on the timestamp
@@ -198,24 +211,21 @@ const cardCreater = (day, i) => {
     }
     //create sunrise
     const sunrise = document.createElement("span");
-    sunrise.innerText = "sunrise:" + " " + getTime(sunriseTime);
+    sunrise.innerText = "The sun will rise @" + " " + getTime(sunriseTime);
     textContainerRight.appendChild(sunrise);
     //sunset
     const sunset = document.createElement("span");
-    sunset.innerText = "sunset:" + " " + getTime(sunsetTime);
+    sunset.innerText = "The sun will set @" + " " + getTime(sunsetTime);
     textContainerRight.appendChild(sunset);
-    //min max temp
-    const minMaxTemp = document.createElement("span");
-    minMaxTemp.innerText = day.temp.min + "°" + " | " + day.temp.max + "°"; 
-    textContainerRight.appendChild(minMaxTemp);
-    
+
+
 }
 
 
 
 
-searchField.addEventListener("keyup", function(KeyboardEvent){
-    if(KeyboardEvent === 13){
+searchField.addEventListener("keyup", function (KeyboardEvent) {
+    if (KeyboardEvent === 13) {
         for (let i = 0; i < 5; i++) {
             cardCreater(days[i], i);
         };
