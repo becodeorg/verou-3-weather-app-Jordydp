@@ -4,10 +4,6 @@ import Data from "./config.js";
 //select body for background change
 const body = document.querySelector("body");
 
-
-
-
-
 //array of weekdays
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -27,7 +23,10 @@ console.log(n)
 //then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
 const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
 
-
+const CreateImgOfCity = (image) =>{
+    let background = image.results[1].urls.raw;
+    body.style.backgroundImage = "url(" + background + ")";
+}
 
 
 //get inputfield
@@ -82,21 +81,7 @@ const fetchData = (event) => {
 
                     fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
                         .then(response => response.json())
-                        .then(image => {
-                            let background = image.results[1].urls.raw;
-                            console.log(background)
-                            body.style.backgroundImage = "url(" + background + ")";
-                        });
-
-
-
-
-
-
-
-
-
-
+                        .then(CreateImgOfCity);
                 });
         });
 
