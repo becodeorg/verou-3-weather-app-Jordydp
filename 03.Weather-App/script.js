@@ -7,22 +7,29 @@ const searchField = document.getElementById("searchfield");
 
 const submit = document.querySelector("button");
 
+const getWeekDaysInOrder = (weekday) =>{
 //array of weekdays
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 //d = date
 let d = new Date();
 // n = date in number 0->6
 let n = d.getDay();
-console.log(n)
 /*for(let i = 0; i < weekdays.length; i++){
     let x = (n+i) % weekdays.length;
     let weekday = weekdays[x];
     let weekDaysInOrder = weekday;
-}*/
-//get weekdays slice is used to split the array started from n and n = today
-//then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
+}
+get weekdays slice is used to split the array started from n
+and n = today then i concat = combine 2 arrays  my weekdays
+slice them again start from 0(so start) till n*/
 const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
+console.log(weekDaysInOrder[0])
+return weekDaysInOrder;
+
+}
+
+getWeekDaysInOrder();
+
 
 const getTime = (time) => {
     // Create a new JavaScript Date object based on the timestamp
@@ -40,6 +47,12 @@ const getTime = (time) => {
     return formattedTime;
 }
 
+const fetchImage = (searchFieldInput) =>{
+    fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
+        .then(response => response.json())
+        .then(CreateImgOfCity);
+}
+
 const CreateImgOfCity = (image) =>{
     //select body for background change
     const body = document.querySelector("body");
@@ -49,9 +62,10 @@ const CreateImgOfCity = (image) =>{
 
 //create function to get info from api
 const fetchData = () =>{
-
     //get value of inputfield
     const searchFieldInput = searchField.value;
+    
+
     //fetch api + value of input field + metric + api key
 
     fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchFieldInput + "&appid=" + Data[0].key + "&units=metric")
@@ -78,12 +92,11 @@ const fetchData = () =>{
                         cardCreater(days[i], i);
                     }
 
-                    fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
-                        .then(response => response.json())
-                        .then(CreateImgOfCity);
+                    fetchImage(searchFieldInput);
+                    
                 });
         });
-
+        return searchFieldInput
 }
 
 
@@ -96,7 +109,8 @@ const displayfetchData = (event) => {
 
 
 
-const cardCreater = (day, i) => {
+const cardCreater = (day,weekday) => {
+    console.log({weekday})
     // create a card
     const searchFieldInput = searchField.value;
     console.log(searchFieldInput);
@@ -117,7 +131,7 @@ const cardCreater = (day, i) => {
 
     //adding days to card
     const dayTitle = document.createElement("h2");
-    dayTitle.innerText = "on" + " " + weekDaysInOrder[i] + " is";
+    dayTitle.innerText = "on" + " " + weekday + " is";
     newCard.appendChild(dayTitle);
 
     //icon + description div
