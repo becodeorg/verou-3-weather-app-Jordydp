@@ -4,7 +4,7 @@ import Data from "./config.js";
 
 //get inputfield
 const searchField = document.getElementById("searchfield");
-//console.log(searchField);
+
 const submit = document.querySelector("button");
 
 //array of weekdays
@@ -47,17 +47,11 @@ const CreateImgOfCity = (image) =>{
     body.style.backgroundImage = "url(" + background + ")";
 }
 
-
 //create function to get info from api
-const fetchData = (event) => {
-    //prevent default
-    event.preventDefault();
+const fetchData = () =>{
 
     //get value of inputfield
     const searchFieldInput = searchField.value;
-
-
-    //console.log(searchFieldInput);
     //fetch api + value of input field + metric + api key
 
     fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchFieldInput + "&appid=" + Data[0].key + "&units=metric")
@@ -91,8 +85,16 @@ const fetchData = (event) => {
         });
 
 }
-//addEventListener on click use event
-submit.addEventListener('click', fetchData);
+
+
+
+const displayfetchData = (event) => {
+    //prevent default
+    event.preventDefault();
+    fetchData();    
+}
+
+
 
 const cardCreater = (day, i) => {
     // create a card
@@ -171,6 +173,10 @@ const cardCreater = (day, i) => {
     textContainerRight.appendChild(sunset);
 }
 
+//addEventListener on click use event
+submit.addEventListener('click', displayfetchData);
+
+//event at Enter
 searchField.addEventListener("keyup", function (KeyboardEvent) {
     if (KeyboardEvent === 13) {
         for (let i = 0; i < 5; i++) {
