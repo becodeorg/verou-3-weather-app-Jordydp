@@ -6,59 +6,28 @@ import Data from "./config.js";
 const searchField = document.getElementById("searchfield");
 const submit = document.querySelector("button");
 
+//display the data fetched
+const displayfetchData = (event) => {
+    //prevent default
+    event.preventDefault();
+    const cityInput = getSearchfieldInput();
+    fetchImage(cityInput);
+    fetchData(cityInput);
+    
+}
+const fetchImage = () =>{
+    fetch("https://api.unsplash.com/search/photos?query="
+        + getSearchfieldInput() + 
+        "&client_id=" + Data[1].UnsplashData)
+        .then(response => response.json())
+        .then(CreateImgOfCity);
+}
+
 const getSearchfieldInput = () =>{
     //get value of inputfield
     const searchField = document.getElementById("searchfield");
     const searchFieldInput = searchField.value;
     return searchFieldInput;
-}
-
-
-const getWeekDaysInOrder = (weekday) =>{
-//array of weekdays
-const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-//d = date
-let d = new Date();
-// n = date in number 0->6
-let n = d.getDay();
-/*for(let i = 0; i < weekdays.length; i++){
-    let x = (n+i) % weekdays.length;
-    let weekday = weekdays[x];
-    let weekDaysInOrder = weekday;
-}
-get weekdays slice is used to split the array started from n
-and n = today then i concat = combine 2 arrays  my weekdays
-slice them again start from 0(so start) till n*/
-const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
-console.log(weekDaysInOrder);
-return weekDaysInOrder;
-
-}
-
-
-
-
-const getTime = (time) => {
-    // Create a new JavaScript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let date = new Date(time * 1000);
-    // Hours part from the timestamp
-    let hours = date.getHours();
-    // Minutes part from the timestamp
-    let minutes = "0" + date.getMinutes();
-    // Seconds part from the timestamp
-    let seconds = "0" + date.getSeconds();
-
-    // Will display time in 10:30:23 format
-    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    return formattedTime;
-}
-
-const fetchImage = (searchFieldInput) =>{
-    
-    fetch("https://api.unsplash.com/search/photos?query=" + getSearchfieldInput() + "&client_id=" + Data[1].UnsplashData)
-        .then(response => response.json())
-        .then(CreateImgOfCity);
 }
 
 const CreateImgOfCity = (image) =>{
@@ -68,13 +37,10 @@ const CreateImgOfCity = (image) =>{
     body.style.backgroundImage = "url(" + background + ")";
 }
 
-
-//create function to get info from api
-const fetchData = (searchFieldInput) => {
-
-    //fetch api + value of input field + metric + api key
+const fetchData = (cityInput) => {
     
-    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + getSearchfieldInput() + "&appid=" + Data[0].key + "&units=metric")
+    //fetch api + value of input field + metric + api key
+        fetch("http://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + Data[0].key + "&units=metric")
         .then(response => response.json())
         .then(data => {
             //store data from fetch inside a variable
@@ -86,38 +52,37 @@ const fetchData = (searchFieldInput) => {
             //console.log(lon);
             //get latitude from first api and store in variable
             const lat = lonAndLat.coord.lat;
-            //console.log(lat);
-
-            //fetch new api with lat en lon + api key from config
-            fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data[0].key + "&units=metric")
-                .then(response => response.json())
-                .then(info => {
-                    let weatherInfo = info;
-                    const days = weatherInfo.daily;
-                    for (let i = 0; i < 5; i++) {
-                        cardCreater(days[i], i);
-                    }
-
-                    fetchImage(searchFieldInput);
-                    
-                });
+            fetchWeatherdata(lat, lon)
         });
         
 }
 
-
-
-const displayfetchData = (event) => {
-    //prevent default
-    event.preventDefault();
-    fetchData();    
+const fetchWeatherdata = (lon, lat) => {
+    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data[0].key + "&units=metric")
+    .then(response => response.json())
+    .then(info => {
+        let weatherInfo = info;
+        const days = weatherInfo.daily;
+        getWeekDaysInOrder(days); 
+    });
 }
 
 
+function getWeekDaysInOrder(days) {
+    //array of weekdays
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    //d = date
+    let d = new Date();
+    // n = date in number 0->6
+    let n = d.getDay();
+    for(let i = 0; i < 5 ; i++){
+        let x = (n+i) % weekdays.length;
+        let weekday = weekdays[x];
+        cardCreater(days[i],weekday);
+    }
 
+}
 const cardCreater = (day,weekday) => {
-
-
     //get section
     const section = document.querySelector("section");
 
@@ -190,14 +155,32 @@ const cardCreater = (day,weekday) => {
     textContainerRight.appendChild(sunset);
 }
 
+
+
+
+
+const getTime = (time) => {
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    let date = new Date(time * 1000);
+    // Hours part from the timestamp
+    let hours = date.getHours();
+    // Minutes part from the timestamp
+    let minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    let seconds = "0" + date.getSeconds();
+
+    // Will display time in 10:30:23 format
+    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
+
 //addEventListener on click use event
 submit.addEventListener('click', displayfetchData);
 
 //event at Enter
 searchField.addEventListener("keyup", function (KeyboardEvent) {
     if (KeyboardEvent === 13) {
-        for (let i = 0; i < 5; i++) {
-            cardCreater(days[i], i);
+        displayfetchData();
         };
-    }
-})
+    })
