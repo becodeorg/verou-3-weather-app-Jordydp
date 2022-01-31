@@ -1,8 +1,7 @@
 //import from config.js
 import Data from "./config.js";
 
-//select body for background change
-const body = document.querySelector("body");
+
 //get inputfield
 const searchField = document.getElementById("searchfield");
 //console.log(searchField);
@@ -42,6 +41,8 @@ const getTime = (time) => {
 }
 
 const CreateImgOfCity = (image) =>{
+    //select body for background change
+    const body = document.querySelector("body");
     let background = image.results[1].urls.raw;
     body.style.backgroundImage = "url(" + background + ")";
 }
@@ -97,7 +98,7 @@ const cardCreater = (day, i) => {
     // create a card
     const searchFieldInput = searchField.value;
     console.log(searchFieldInput);
-    
+
     //get section
     const section = document.querySelector("section");
 
