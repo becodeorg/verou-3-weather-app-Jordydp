@@ -4,8 +4,15 @@ import Data from "./config.js";
 
 //get inputfield
 const searchField = document.getElementById("searchfield");
-
 const submit = document.querySelector("button");
+
+const getSearchfieldInput = () =>{
+    //get value of inputfield
+    const searchField = document.getElementById("searchfield");
+    const searchFieldInput = searchField.value;
+    return searchFieldInput;
+}
+
 
 const getWeekDaysInOrder = (weekday) =>{
 //array of weekdays
@@ -23,12 +30,12 @@ get weekdays slice is used to split the array started from n
 and n = today then i concat = combine 2 arrays  my weekdays
 slice them again start from 0(so start) till n*/
 const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
-console.log(weekDaysInOrder[0])
+console.log(weekDaysInOrder);
 return weekDaysInOrder;
 
 }
 
-getWeekDaysInOrder();
+
 
 
 const getTime = (time) => {
@@ -48,7 +55,8 @@ const getTime = (time) => {
 }
 
 const fetchImage = (searchFieldInput) =>{
-    fetch("https://api.unsplash.com/search/photos?query=" + searchFieldInput + "&client_id=" + Data[1].UnsplashData)
+    
+    fetch("https://api.unsplash.com/search/photos?query=" + getSearchfieldInput() + "&client_id=" + Data[1].UnsplashData)
         .then(response => response.json())
         .then(CreateImgOfCity);
 }
@@ -60,15 +68,13 @@ const CreateImgOfCity = (image) =>{
     body.style.backgroundImage = "url(" + background + ")";
 }
 
+
 //create function to get info from api
-const fetchData = () =>{
-    //get value of inputfield
-    const searchFieldInput = searchField.value;
-    
+const fetchData = (searchFieldInput) => {
 
     //fetch api + value of input field + metric + api key
-
-    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchFieldInput + "&appid=" + Data[0].key + "&units=metric")
+    
+    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + getSearchfieldInput() + "&appid=" + Data[0].key + "&units=metric")
         .then(response => response.json())
         .then(data => {
             //store data from fetch inside a variable
@@ -96,7 +102,7 @@ const fetchData = () =>{
                     
                 });
         });
-        return searchFieldInput
+        
 }
 
 
@@ -110,10 +116,7 @@ const displayfetchData = (event) => {
 
 
 const cardCreater = (day,weekday) => {
-    console.log({weekday})
-    // create a card
-    const searchFieldInput = searchField.value;
-    console.log(searchFieldInput);
+
 
     //get section
     const section = document.querySelector("section");
@@ -125,7 +128,7 @@ const cardCreater = (day,weekday) => {
     //create cardTitle
     const cardTitle = document.createElement("h2");
     cardTitle.classList.add('cardTitle');
-    cardTitle.innerText = "The weather in" + " " + searchFieldInput;
+    cardTitle.innerText = "The weather in" + " " + getSearchfieldInput();
     newCard.appendChild(cardTitle);
 
 
