@@ -3,6 +3,10 @@ import Data from "./config.js";
 
 //select body for background change
 const body = document.querySelector("body");
+//get inputfield
+const searchField = document.getElementById("searchfield");
+//console.log(searchField);
+const submit = document.querySelector("button");
 
 //array of weekdays
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -14,31 +18,34 @@ let n = d.getDay();
 console.log(n)
 /*for(let i = 0; i < weekdays.length; i++){
     let x = (n+i) % weekdays.length;
-
     let weekday = weekdays[x];
-
- let weekDaysInOrder = weekday;
+    let weekDaysInOrder = weekday;
 }*/
 //get weekdays slice is used to split the array started from n and n = today
 //then i concat = combine 2 arrays  my weekdays slice them again start from 0(so start) till n
 const weekDaysInOrder = weekdays.slice(n).concat(weekdays.slice(0, n));
+
+const getTime = (time) => {
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    let date = new Date(time * 1000);
+    // Hours part from the timestamp
+    let hours = date.getHours();
+    // Minutes part from the timestamp
+    let minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    let seconds = "0" + date.getSeconds();
+
+    // Will display time in 10:30:23 format
+    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
 
 const CreateImgOfCity = (image) =>{
     let background = image.results[1].urls.raw;
     body.style.backgroundImage = "url(" + background + ")";
 }
 
-
-//get inputfield
-const searchField = document.getElementById("searchfield");
-
-//console.log(searchField);
-
-const submit = document.querySelector("button")
-
-//get section
-const section = document.querySelector("section");
-//date creation
 
 //create function to get info from api
 const fetchData = (event) => {
@@ -71,11 +78,8 @@ const fetchData = (event) => {
                 .then(response => response.json())
                 .then(info => {
                     let weatherInfo = info;
-                     console.log(weatherInfo);
                     const days = weatherInfo.daily;
-                    console.log(days);
                     for (let i = 0; i < 5; i++) {
-
                         cardCreater(days[i], i);
                     }
 
@@ -89,30 +93,13 @@ const fetchData = (event) => {
 //addEventListener on click use event
 submit.addEventListener('click', fetchData);
 
-
-
-const getTime = (time) => {
-    // Create a new JavaScript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let date = new Date(time * 1000);
-    // Hours part from the timestamp
-    let hours = date.getHours();
-    // Minutes part from the timestamp
-    let minutes = "0" + date.getMinutes();
-    // Seconds part from the timestamp
-    let seconds = "0" + date.getSeconds();
-
-    // Will display time in 10:30:23 format
-    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    return formattedTime;
-}
-
 const cardCreater = (day, i) => {
-    //console.log(day);
-
     // create a card
     const searchFieldInput = searchField.value;
     console.log(searchFieldInput);
+    
+    //get section
+    const section = document.querySelector("section");
 
     const newCard = document.createElement("article");
     newCard.classList.add("card");
@@ -166,35 +153,14 @@ const cardCreater = (day, i) => {
     feelsLike.innerText = "Feels like:" + " " + day.feels_like.day + "°C";
     textContainerLeft.appendChild(feelsLike);
 
-
-
     //create textcontainer right for spans
     const textContainerRight = document.createElement("div");
     textContainerRight.classList.add("textcontainerright");
     textContainer.appendChild(textContainerRight);
 
-
-
-    let sunriseTime = day.sunrise;
-    let sunsetTime = day.sunset;
-    
-
-    const getTime = (time) => {
-        // Create a new JavaScript Date object based on the timestamp
-        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-        let date = new Date(time * 1000);
-        // Hours part from the timestamp
-        let hours = date.getHours();
-        // Minutes part from the timestamp
-        let minutes = "0" + date.getMinutes();
-        // Seconds part from the timestamp
-        let seconds = "0" + date.getSeconds();
-
-        // Will display time in 10:30:23 format
-        let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-        return formattedTime;
-    }
     //create sunrise
+    let sunriseTime = day.sunrise;
+    let sunsetTime = day.sunset;    
     const sunrise = document.createElement("span");
     sunrise.innerText = "The sun will rise @" + " " + getTime(sunriseTime);
     textContainerRight.appendChild(sunrise);
@@ -202,18 +168,12 @@ const cardCreater = (day, i) => {
     const sunset = document.createElement("span");
     sunset.innerText = "The sun will set @" + " " + getTime(sunsetTime);
     textContainerRight.appendChild(sunset);
-
-
 }
-
-
-
 
 searchField.addEventListener("keyup", function (KeyboardEvent) {
     if (KeyboardEvent === 13) {
         for (let i = 0; i < 5; i++) {
             cardCreater(days[i], i);
         };
-
     }
 })
