@@ -38,37 +38,40 @@ const CreateImgOfCity = (image) =>{
 }
 
 const fetchData = (cityInput) => {
-    
     //fetch api + value of input field + metric + api key
-        fetch("http://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + Data[0].key + "&units=metric")
-        .then(response => response.json())
-        .then(data => {
-            //store data from fetch inside a variable
-            let lonAndLat = data;
-            //console log this info
-            // console.log(lonAndLat);
-            // get longitude from first api and stor in variable
-            const lon = lonAndLat.coord.lon;
-            //console.log(lon);
-            //get latitude from first api and store in variable
-            const lat = lonAndLat.coord.lat;
-            fetchWeatherdata(lat, lon)
-        });
+    //console log this info
+    // console.log(lonAndLat);
+    // get longitude from first api and stor in variable
+    fetch("http://api.openweathermap.org/data/2.5/weather?q=" + cityInput + "&appid=" + Data[0].key + "&units=metric")
+    .then(response => response.json())
+    .then(data => {
+        //store data from fetch inside a variable
+        const firstApi = data;
+        fetchWeatherdata(firstApi);
         
+        return firstApi;
+    });
+    
 }
 
-const fetchWeatherdata = (lon, lat) => {
+const fetchWeatherdata = (firstApi) => {
+    
+    //get Longitude from first api and store in variable
+    const lon = firstApi.coord.lon;
+    //get latitude from first api and store in variable
+    const lat = firstApi.coord.lat;
+
     fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=" + Data[0].key + "&units=metric")
     .then(response => response.json())
     .then(info => {
         let weatherInfo = info;
         const days = weatherInfo.daily;
-        getWeekDaysInOrder(days); 
+        getWeekDaysInOrder(days, firstApi); 
     });
 }
 
 
-function getWeekDaysInOrder(days) {
+const getWeekDaysInOrder = (days, firstApi) => {
     //array of weekdays
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     //d = date
@@ -78,11 +81,15 @@ function getWeekDaysInOrder(days) {
     for(let i = 0; i < 5 ; i++){
         let x = (n+i) % weekdays.length;
         let weekday = weekdays[x];
-        cardCreater(days[i],weekday);
+        cardCreater(days[i],weekday, firstApi);
     }
 
 }
-const cardCreater = (day,weekday) => {
+
+//create a card 
+const cardCreater = (day, weekday, firstApi) => {
+    console.log(day);
+    console.log(firstApi);
     //get section
     const section = document.querySelector("section");
 
@@ -142,36 +149,61 @@ const cardCreater = (day,weekday) => {
     const textContainerRight = document.createElement("div");
     textContainerRight.classList.add("textcontainerright");
     textContainer.appendChild(textContainerRight);
+    
+    //create sunrise  
+    
+    let sunrise = firstApi.sys.sunrise;
+    console.log(sunrise);
+    let sunset = firstApi.sys.sunset;
+    let timezone = firstApi.timezone;
+    let sunriseOffset = sunrise-timezone;
+    let sunsetOffset = sunset - timezone;
 
-    //create sunrise
-    let sunriseTime = day.sunrise;
-    let sunsetTime = day.sunset;    
-    const sunrise = document.createElement("span");
-    sunrise.innerText = "The sun will rise @" + " " + getTime(sunriseTime);
-    textContainerRight.appendChild(sunrise);
+
+    const sunriseDisplay = document.createElement("span");
+    sunrise.innerText = "The sun will rise @" + " " + getSunriseTime(sunriseOffset);
+    textContainerRight.appendChild(sunriseDisplay);
     //sunset
-    const sunset = document.createElement("span");
-    sunset.innerText = "The sun will set @" + " " + getTime(sunsetTime);
-    textContainerRight.appendChild(sunset);
+    const sunsetDisplay = document.createElement("span");
+    sunset.innerText = "The sun will set @" + " " + getSunsetTime(sunsetOffset);
+    textContainerRight.appendChild(sunsetDisplay);
 }
 
 
 
 
 
-const getTime = (time) => {
+const getSunriseTime = (sunriseOffset) => {
+    
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let date = new Date(time * 1000);
+    let date = sunriseOffset * 1000;
     // Hours part from the timestamp
     let hours = date.getHours();
     // Minutes part from the timestamp
     let minutes = "0" + date.getMinutes();
     // Seconds part from the timestamp
-    let seconds = "0" + date.getSeconds();
+    //let seconds = "0" + date.getSeconds();
 
     // Will display time in 10:30:23 format
-    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    let formattedTime = hours + ':' + minutes.substr(-2)
+    return formattedTime;
+}
+
+const getSunsetTime = (sunsetOffset) =>{
+
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    let date = sunsetOffset * 1000;
+    // Hours part from the timestamp
+    let hours = date.getHours();
+    // Minutes part from the timestamp
+    let minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    //let seconds = "0" + date.getSeconds();
+
+    // Will display time in 10:30:23 format
+    let formattedTime = hours + ':' + minutes.substr(-2)
     return formattedTime;
 }
 
