@@ -15,7 +15,7 @@ const displayfetchData = (event) => {
     fetchData(cityInput);
     
 }
-const fetchImage = () =>{
+const fetchImage = () => {
     fetch("https://api.unsplash.com/search/photos?query="
         + getSearchfieldInput() + 
         "&client_id=" + Data[1].UnsplashData)
@@ -23,7 +23,7 @@ const fetchImage = () =>{
         .then(CreateImgOfCity);
 }
 
-const getSearchfieldInput = () =>{
+const getSearchfieldInput = () => {
     //get value of inputfield
     const searchField = document.getElementById("searchfield");
     const searchFieldInput = searchField.value;
@@ -151,21 +151,23 @@ const cardCreater = (day, weekday, firstApi) => {
     textContainer.appendChild(textContainerRight);
     
     //create sunrise  
-    
-    let sunrise = firstApi.sys.sunrise;
-    console.log(sunrise);
-    let sunset = firstApi.sys.sunset;
+    console.log({day});
+    let sunrise = day.sunrise;
+    console.log({sunrise});
+    let sunset = day.sunset;
     let timezone = firstApi.timezone;
-    let sunriseOffset = sunrise-timezone;
-    let sunsetOffset = sunset - timezone;
+    console.log({timezone});
+    let sunriseOffset = (sunrise + timezone) - 3600 ;
+    console.log({sunriseOffset});
+    let sunsetOffset = (sunset + timezone)-3600 ;
 
 
     const sunriseDisplay = document.createElement("span");
-    sunrise.innerText = "The sun will rise @" + " " + getSunriseTime(sunriseOffset);
+    sunriseDisplay.innerText = "The sun will rise @" + " " + getSunriseTime(sunriseOffset);
     textContainerRight.appendChild(sunriseDisplay);
     //sunset
     const sunsetDisplay = document.createElement("span");
-    sunset.innerText = "The sun will set @" + " " + getSunsetTime(sunsetOffset);
+    sunsetDisplay.innerText = "The sun will set @" + " " + getSunsetTime(sunsetOffset);
     textContainerRight.appendChild(sunsetDisplay);
 }
 
@@ -177,7 +179,7 @@ const getSunriseTime = (sunriseOffset) => {
     
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let date = sunriseOffset * 1000;
+    let date = new Date(sunriseOffset * 1000);
     // Hours part from the timestamp
     let hours = date.getHours();
     // Minutes part from the timestamp
@@ -194,7 +196,7 @@ const getSunsetTime = (sunsetOffset) =>{
 
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let date = sunsetOffset * 1000;
+    let date = new Date(sunsetOffset * 1000);
     // Hours part from the timestamp
     let hours = date.getHours();
     // Minutes part from the timestamp
